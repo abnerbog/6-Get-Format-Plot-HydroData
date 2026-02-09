@@ -86,7 +86,7 @@ dataAvailable <- read_waterdata_ts_meta(
   skipGeometry = TRUE)
 
 
-print(dataAvailable)
+head(dataAvailable)
 ```
 
 ## Joins
