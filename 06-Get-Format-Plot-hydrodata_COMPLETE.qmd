@@ -1,23 +1,31 @@
 ---
-title: "Chapter 6: Joins, Pivots, and USGS dataRetrieval"
+title: 'Chapter 6: Joins, Pivots, and USGS dataRetrieval'
 date: today
 author:
   - name: JP Gannon
     orcid: 0000-0002-4595-3214
-    url: https://jpgannon.github.io/
-    affiliation: 
+    url: 'https://jpgannon.github.io/'
+    affiliation:
       - name: Virginia Tech
-        url: https://www.vt.edu/
+        url: 'https://www.vt.edu/'
 format:
-  html: 
+  html:
     self-contained: true
   ipynb:
     nb-frontmatter: true
-    jupyter:
-      kernel: ir
-      ipynb-shell-interactivity: all
-execute: 
+execute:
   enabled: true
+jupyter:
+  jupytext:
+    text_representation:
+      extension: .qmd
+      format_name: quarto
+      format_version: '1.0'
+      jupytext_version: 1.19.1
+  kernelspec:
+    display_name: R
+    language: R
+    name: ir
 ---
 
 # Joins, Pivots, and USGS dataRetrieval
@@ -78,7 +86,7 @@ dataAvailable <- read_waterdata_ts_meta(
   skipGeometry = TRUE)
 
 
-dataAvailable
+print(dataAvailable)
 ```
 
 ## Joins
@@ -151,7 +159,7 @@ What if the same information is in two columns that have different names? Good q
 dataAvailable <- left_join(dataAvailable, siteinfo, 
                            by = "monitoring_location_id")
 
-dataAvailable
+print(dataAvailable)
 
 #that made a lot of columns, let's clean it up
 dataAvailClean <- dataAvailable |> 
@@ -163,7 +171,7 @@ dataAvailClean <- dataAvailable |>
          begin, 
          end)
 
-dataAvailClean
+print(dataAvailClean)
 ```
 
 ## Finding IDs to download USGS data
@@ -227,7 +235,6 @@ swva_dat <- read_waterdata_daily(
   time = c(start, end),
   skipGeometry = TRUE)|>
   left_join(parameterCdFile, by = c("parameter_code" = "parameter_cd") )
-
 ```
 
 Let's plot the water temperature data and discharge as lines and control the color of the lines with the different sites. Because the data is stacked together in one column, we can facet by the column that identifies the measurements (parameter_nm) to make a combined plot of the two.
@@ -351,7 +358,6 @@ params <- c("00940", "00095")
 
 new_river_wq <- readWQPqw(siteNumbers = new_river_sites,
                          parameterCd = params)
-
 ```
 
 Now, let's clean things up a bit. Hang on tight, we are going to do a bunch of data wrangling in one pipe sequence to accomplish what we want: A dataset that has chloride and specific conductance in their own columns, with a column for time, and one that says what site the measurement was from.
@@ -367,6 +373,7 @@ The workflow is as follows:
 - Select just the columns we want
 
 Finally plot chloride on the x axis, specific conductance on the y, and color by site!
+
 ```{r}
 nr_wq_wide <- new_river_wq |>
   mutate(time = ymd_hms(
