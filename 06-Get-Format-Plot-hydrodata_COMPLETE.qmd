@@ -50,7 +50,6 @@ Install the dataRetrieval package. Load it and the tidyverse.
 #install.packages("dataRetrieval")
 library(dataRetrieval)
 library(tidyverse)
-library(lubridate)
 ```
 
 ## Exploring what dataRetrieval can do.
