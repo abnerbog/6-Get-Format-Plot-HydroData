@@ -26,18 +26,13 @@ Install the dataRetrieval package. Load it and the tidyverse.
 ``` r
 #install.packages("dataRetrieval")
 library(dataRetrieval)
-library(tidyverse)
 ```
 
-    Warning: package 'tidyverse' was built under R version 4.3.3
+    Warning: package 'dataRetrieval' was built under R version 4.4.3
 
-    Warning: package 'readr' was built under R version 4.3.3
-
-    Warning: package 'dplyr' was built under R version 4.3.3
-
-    Warning: package 'forcats' was built under R version 4.3.3
-
-    Warning: package 'lubridate' was built under R version 4.3.3
+``` r
+library(tidyverse)
+```
 
 ## Exploring what dataRetrieval can do.
 
@@ -77,7 +72,7 @@ siteinfo <- read_waterdata_monitoring_location(
 ```
 
     Requesting:
-    https://api.waterdata.usgs.gov/ogcapi/v0/collections/monitoring-locations/items?f=json&lang=en-US&limit=10000&id=USGS-03171000
+    https://api.waterdata.usgs.gov/ogcapi/v0/collections/monitoring-locations/items?f=json&lang=en-US&limit=50000&id=USGS-03171000
 
 ``` r
 #What data is available for the site?
@@ -91,25 +86,25 @@ dataAvailable <- read_waterdata_ts_meta(
 ```
 
     Requesting:
-    https://api.waterdata.usgs.gov/ogcapi/v0/collections/time-series-metadata/items?f=json&lang=en-US&skipGeometry=TRUE&limit=10000&monitoring_location_id=USGS-03171000&statistic_id=00003&computation_period_identifier=Daily
+    https://api.waterdata.usgs.gov/ogcapi/v0/collections/time-series-metadata/items?f=json&lang=en-US&skipGeometry=TRUE&monitoring_location_id=USGS-03171000&statistic_id=00003&computation_period_identifier=Daily&limit=50000
 
 ``` r
 head(dataAvailable)
 ```
 
     # A tibble: 3 × 21
-      time_series_id      unit_of_measure parameter_name parameter_code statistic_id
-      <chr>               <chr>           <chr>          <chr>          <chr>       
-    1 729f14c4c3904c9e9b… degC            Temperature, … 00010          00003       
-    2 891a79c79ffe453daa… uS/cm           Specific cond… 00095          00003       
-    3 c48bc712c5b34f92a2… ft^3/s          Discharge      00060          00003       
-    # ℹ 16 more variables: hydrologic_unit_code <chr>, state_name <chr>,
+      unit_of_measure parameter_name       parameter_code statistic_id
+      <chr>           <chr>                <chr>          <chr>       
+    1 degC            Temperature, water   00010          00003       
+    2 uS/cm           Specific cond at 25C 00095          00003       
+    3 ft^3/s          Discharge            00060          00003       
+    # ℹ 17 more variables: hydrologic_unit_code <chr>, state_name <chr>,
     #   last_modified <dttm>, begin <dttm>, end <dttm>, begin_utc <dttm>,
     #   end_utc <dttm>, computation_period_identifier <chr>,
     #   computation_identifier <chr>, thresholds <chr>,
     #   sublocation_identifier <chr>, primary <chr>, monitoring_location_id <chr>,
     #   web_description <chr>, parameter_description <chr>,
-    #   parent_time_series_id <chr>
+    #   parent_time_series_id <chr>, time_series_id <chr>
 
 ## Joins
 
@@ -219,22 +214,22 @@ later.
 dataAvailable <- left_join(dataAvailable, siteinfo, 
                            by = "monitoring_location_id")
 
-dataAvailable
+print(dataAvailable)
 ```
 
     # A tibble: 3 × 61
-      time_series_id      unit_of_measure parameter_name parameter_code statistic_id
-      <chr>               <chr>           <chr>          <chr>          <chr>       
-    1 729f14c4c3904c9e9b… degC            Temperature, … 00010          00003       
-    2 891a79c79ffe453daa… uS/cm           Specific cond… 00095          00003       
-    3 c48bc712c5b34f92a2… ft^3/s          Discharge      00060          00003       
-    # ℹ 56 more variables: hydrologic_unit_code.x <chr>, state_name.x <chr>,
+      unit_of_measure parameter_name       parameter_code statistic_id
+      <chr>           <chr>                <chr>          <chr>       
+    1 degC            Temperature, water   00010          00003       
+    2 uS/cm           Specific cond at 25C 00095          00003       
+    3 ft^3/s          Discharge            00060          00003       
+    # ℹ 57 more variables: hydrologic_unit_code.x <chr>, state_name.x <chr>,
     #   last_modified <dttm>, begin <dttm>, end <dttm>, begin_utc <dttm>,
     #   end_utc <dttm>, computation_period_identifier <chr>,
     #   computation_identifier <chr>, thresholds <chr>,
     #   sublocation_identifier <chr>, primary <chr>, monitoring_location_id <chr>,
     #   web_description <chr>, parameter_description <chr>,
-    #   parent_time_series_id <chr>, agency_code <chr>, agency_name <chr>, …
+    #   parent_time_series_id <chr>, time_series_id <chr>, agency_code <chr>, …
 
 ``` r
 #that made a lot of columns, let's clean it up
@@ -247,7 +242,7 @@ dataAvailClean <- dataAvailable |>
          begin, 
          end)
 
-dataAvailClean
+print(dataAvailClean)
 ```
 
     # A tibble: 3 × 7
@@ -283,12 +278,12 @@ swva_sites <- read_waterdata_ts_meta(bbox = swva,
 ```
 
     Requesting:
-    https://api.waterdata.usgs.gov/ogcapi/v0/collections/time-series-metadata/items?f=json&lang=en-US&skipGeometry=TRUE&limit=10000&bbox=-81.36%2C36.72%2C-80.27%2C37.32&properties=monitoring_location_id,parameter_code,begin,end
+    https://api.waterdata.usgs.gov/ogcapi/v0/collections/time-series-metadata/items?f=json&lang=en-US&skipGeometry=TRUE&bbox=-81.36%2C36.72%2C-80.27%2C37.32&properties=monitoring_location_id%2Cparameter_code%2Cbegin%2Cend&parameter_code=00060,00010&computation_period_identifier=Daily&limit=50000
 
 ``` r
 swva_sites <- swva_sites |> filter(str_detect(monitoring_location_id, "USGS-"))
 
-swva_sites
+print(swva_sites)
 ```
 
     # A tibble: 28 × 4
@@ -315,7 +310,7 @@ all_VA_sites <- read_waterdata_monitoring_location(
 ```
 
     Requesting:
-    https://api.waterdata.usgs.gov/ogcapi/v0/collections/monitoring-locations/items?f=json&lang=en-US&limit=10000&properties=agency_code&state_name=Virginia&site_type=Stream
+    https://api.waterdata.usgs.gov/ogcapi/v0/collections/monitoring-locations/items?f=json&lang=en-US&properties=agency_code&state_name=Virginia&site_type=Stream&limit=50000
 
 ``` r
 #a quick way to see how many sites are in Virginia is to plot their position!
@@ -370,9 +365,9 @@ swva_dat <- read_waterdata_daily(
 ```
 
     Requesting:
-    https://api.waterdata.usgs.gov/ogcapi/v0/collections/daily/items?f=json&lang=en-US&time=2006-10-01%2F2008-09-30&skipGeometry=TRUE&limit=10000
+    https://api.waterdata.usgs.gov/ogcapi/v0/collections/daily/items?f=json&lang=en-US&skipGeometry=TRUE&monitoring_location_id=USGS-03170000,USGS-03166800,USGS-03168000,USGS-03473500,USGS-03167000,USGS-03166000,USGS-03177700,USGS-03167000,USGS-03175140,USGS-03172500,USGS-03175500,USGS-03171000,USGS-03168500,USGS-03165500,USGS-03165500,USGS-03164500,USGS-03177710,USGS-03173000,USGS-03167500,USGS-03171500,USGS-03171500,USGS-03166900,USGS-03168000,USGS-03171000,USGS-03173000,USGS-03175500,USGS-03169500,USGS-03166880&parameter_code=00010,00060&time=2006-10-01%2F2008-09-30&limit=50000
 
-    ⠙ Iterating 1 done (0.27/s) | 3.7s
+    ⠙ Iterating 1 done (0.38/s) | 2.6s
 
 Let’s plot the water temperature data and discharge as lines and control
 the color of the lines with the different sites. Because the data is
@@ -407,7 +402,7 @@ swva_info <- read_waterdata_monitoring_location(
 ```
 
     Requesting:
-    https://api.waterdata.usgs.gov/ogcapi/v0/collections/monitoring-locations/items?f=json&lang=en-US&limit=10000
+    https://api.waterdata.usgs.gov/ogcapi/v0/collections/monitoring-locations/items?f=json&lang=en-US&limit=50000&id=USGS-03170000,USGS-03166800,USGS-03168000,USGS-03473500,USGS-03167000,USGS-03166000,USGS-03177700,USGS-03167000,USGS-03175140,USGS-03172500,USGS-03175500,USGS-03171000,USGS-03168500,USGS-03165500,USGS-03165500,USGS-03164500,USGS-03177710,USGS-03173000,USGS-03167500,USGS-03171500,USGS-03171500,USGS-03166900,USGS-03168000,USGS-03171000,USGS-03173000,USGS-03175500,USGS-03169500,USGS-03166880
 
 ``` r
 swva_dat_clean <- 
