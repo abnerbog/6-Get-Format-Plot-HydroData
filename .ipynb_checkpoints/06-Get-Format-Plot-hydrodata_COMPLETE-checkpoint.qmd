@@ -1,9 +1,22 @@
 ---
-title: 'Chapter 6: Joins, Pivots, and USGS dataRetrieval'
+title: "Chapter 6: Joins, Pivots, and USGS dataRetrieval"
 date: today
-author: JP Gannon
-format: gfm
-execute:
+author:
+  - name: JP Gannon
+    orcid: 0000-0002-4595-3214
+    url: https://jpgannon.github.io/
+    affiliation: 
+      - name: Virginia Tech
+        url: https://www.vt.edu/
+format:
+  html: 
+    self-contained: true
+  ipynb:
+    nb-frontmatter: true
+    jupyter:
+      kernel: ir
+      ipynb-shell-interactivity: all
+execute: 
   enabled: true
 ---
 
@@ -26,9 +39,11 @@ Prep question: How would you get data from the USGS NWIS (non-R)?
 Install the dataRetrieval package. Load it and the tidyverse.
 
 ```{r, message = FALSE}
+#| results: hold
 #install.packages("dataRetrieval")
 library(dataRetrieval)
 library(tidyverse)
+library(lubridate)
 ```
 
 ## Exploring what dataRetrieval can do.
@@ -46,6 +61,7 @@ First, let's get information about the site using the read_waterdata_monitoring_
 Remember, all the parameter codes and site names get passed to dataRetrieval functions as characters, so they must be in quotes and site numbers must have "USGS-" at the front.
 
 ```{r}
+#| results: hold
 #important: note the site number gets input as a character with agency code prefix
 site <- "USGS-03171000"
 
@@ -64,7 +80,7 @@ dataAvailable <- read_waterdata_ts_meta(
   skipGeometry = TRUE)
 
 
-head(dataAvailable)
+dataAvailable
 ```
 
 ## Joins
@@ -175,7 +191,7 @@ swva_sites <- read_waterdata_ts_meta(bbox = swva,
 
 swva_sites <- swva_sites |> filter(str_detect(monitoring_location_id, "USGS-"))
 
-swva_sites
+print(swva_sites)
 
 #you can get all the sites in VA using read_waterdata_monitoring_location as follows
 all_VA_sites <- read_waterdata_monitoring_location(
@@ -213,6 +229,7 @@ swva_dat <- read_waterdata_daily(
   time = c(start, end),
   skipGeometry = TRUE)|>
   left_join(parameterCdFile, by = c("parameter_code" = "parameter_cd") )
+
 ```
 
 Let's plot the water temperature data and discharge as lines and control the color of the lines with the different sites. Because the data is stacked together in one column, we can facet by the column that identifies the measurements (parameter_nm) to make a combined plot of the two.
@@ -336,6 +353,7 @@ params <- c("00940", "00095")
 
 new_river_wq <- readWQPqw(siteNumbers = new_river_sites,
                          parameterCd = params)
+
 ```
 
 Now, let's clean things up a bit. Hang on tight, we are going to do a bunch of data wrangling in one pipe sequence to accomplish what we want: A dataset that has chloride and specific conductance in their own columns, with a column for time, and one that says what site the measurement was from.
@@ -351,7 +369,6 @@ The workflow is as follows:
 - Select just the columns we want
 
 Finally plot chloride on the x axis, specific conductance on the y, and color by site!
-
 ```{r}
 nr_wq_wide <- new_river_wq |>
   mutate(time = ymd_hms(
