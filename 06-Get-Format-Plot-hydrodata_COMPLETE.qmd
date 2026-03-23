@@ -1,10 +1,9 @@
 ---
-title: 'Chapter 6: Joins, Pivots, and USGS dataRetrieval'
-date: today
-author: JP Gannon
-format: gfm
-execute:
-  enabled: true
+title: "Chapter 6: Joins, Pivots, and USGS dataRetrieval"
+date: 2026-03-23
+authors:
+  - id: jpgannon
+github: https://github.com/VT-Hydroinformatics/6-Get-Format-Plot-HydroData
 ---
 
 # Joins, Pivots, and USGS dataRetrieval
