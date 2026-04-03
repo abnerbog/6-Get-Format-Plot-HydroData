@@ -3,7 +3,27 @@ title: 'Chapter 6: Joins, Pivots, and USGS dataRetrieval'
 date: 2026-03-23T00:00:00.000Z
 authors:
   - id: jpgannon
+    name: JP Gannon
+    email: jpgannon@vt.edu
+    github: jpgannon
+    orcid: 0000-0002-4595-3214
+    corresponding: true
+    url: https://jpgannon.github.io/
+    affiliations:
+      - vt-tech
+affiliations:
+  - id: vt-tech
+    name: Virginia Tech
+    url: https://www.vt.edu/
+subject: Courseware
+doi: https://doi.org/10.4211/hs.071059a169ce4fccac21f54bdb0289d3
+venue:
+  title: View Resource on HydroShare
+  url: https://hydroshare.org/resource/071059a169ce4fccac21f54bdb0289d3/
 github: https://github.com/VT-Hydroinformatics/6-Get-Format-Plot-HydroData
+downloads:
+  - file: 06-Get-Format-Plot-hydrodata_COMPLETE.md
+  - file: 06-Get-Format-Plot-hydrodata_COMPLETE.pdf
 ---
 
 
@@ -227,13 +247,13 @@ dataAvailable <- left_join(dataAvailable, siteinfo,
 dataAvailable
 ```
 
-    # A tibble: 3 × 61
+    # A tibble: 3 × 64
       time_series_id      unit_of_measure parameter_name parameter_code statistic_id
       <chr>               <chr>           <chr>          <chr>          <chr>       
     1 729f14c4c3904c9e9b… degC            Temperature, … 00010          00003       
     2 891a79c79ffe453daa… uS/cm           Specific cond… 00095          00003       
     3 c48bc712c5b34f92a2… ft^3/s          Discharge      00060          00003       
-    # ℹ 56 more variables: hydrologic_unit_code.x <chr>, state_name.x <chr>,
+    # ℹ 59 more variables: hydrologic_unit_code.x <chr>, state_name.x <chr>,
     #   last_modified <dttm>, begin <dttm>, end <dttm>, begin_utc <dttm>,
     #   end_utc <dttm>, computation_period_identifier <chr>,
     #   computation_identifier <chr>, thresholds <chr>,
@@ -299,14 +319,14 @@ swva_sites
     # A tibble: 28 × 4
        monitoring_location_id parameter_code begin               end                
        <chr>                  <chr>          <dttm>              <dttm>             
-     1 USGS-03170000          00060          1928-10-01 00:00:00 2026-03-22 00:00:00
+     1 USGS-03170000          00060          1928-10-01 00:00:00 2026-04-01 00:00:00
      2 USGS-03166800          00060          1976-05-01 00:00:00 1993-09-30 00:00:00
      3 USGS-03168000          00010          2007-01-09 00:00:00 2008-09-29 00:00:00
      4 USGS-03473500          00060          1947-10-01 00:00:00 1989-09-29 00:00:00
      5 USGS-03167000          00010          2006-12-21 00:00:00 2009-06-30 00:00:00
      6 USGS-03166000          00060          1930-04-01 00:00:00 1934-09-29 00:00:00
      7 USGS-03177700          00060          1965-10-01 00:00:00 1980-09-29 00:00:00
-     8 USGS-03167000          00060          1908-10-01 00:00:00 2026-03-22 00:00:00
+     8 USGS-03167000          00060          1908-10-01 00:00:00 2026-04-02 00:00:00
      9 USGS-03175140          00060          1929-10-01 00:00:00 1932-09-29 00:00:00
     10 USGS-03172500          00060          1908-10-01 00:00:00 1916-09-29 00:00:00
     # ℹ 18 more rows
@@ -377,7 +397,7 @@ swva_dat <- read_waterdata_daily(
     Requesting:
     https://api.waterdata.usgs.gov/ogcapi/v0/collections/daily/items?f=json&lang=en-US&time=2006-10-01%2F2008-09-30&skipGeometry=TRUE&limit=10000
 
-    ⠙ Iterating 1 done (0.22/s) | 4.5s
+    ⠙ Iterating 1 done (0.47/s) | 2.1s
 
 Let’s plot the water temperature data and discharge as lines and control
 the color of the lines with the different sites. Because the data is

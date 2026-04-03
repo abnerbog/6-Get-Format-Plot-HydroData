@@ -3,7 +3,27 @@ title: "Chapter 6: Joins, Pivots, and USGS dataRetrieval"
 date: 2026-03-23
 authors:
   - id: jpgannon
+    name: JP Gannon
+    email: jpgannon@vt.edu
+    github: jpgannon
+    orcid: 0000-0002-4595-3214
+    corresponding: true
+    url: https://jpgannon.github.io/
+    affiliations:
+      - vt-tech
+affiliations:
+  - id: vt-tech
+    name: Virginia Tech
+    url: https://www.vt.edu/
+subject: Courseware
+doi: https://doi.org/10.4211/hs.071059a169ce4fccac21f54bdb0289d3
+venue:
+  title: View Resource on HydroShare
+  url: https://hydroshare.org/resource/071059a169ce4fccac21f54bdb0289d3/
 github: https://github.com/VT-Hydroinformatics/6-Get-Format-Plot-HydroData
+downloads:
+  - file: 06-Get-Format-Plot-hydrodata_COMPLETE.md
+  - file: 06-Get-Format-Plot-hydrodata_COMPLETE.pdf
 ---
 
 # Joins, Pivots, and USGS dataRetrieval
